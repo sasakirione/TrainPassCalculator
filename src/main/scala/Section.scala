@@ -1,4 +1,4 @@
-case class Section(from: String, to: String) {
+case class Section(from: String, to: String) extends SectionInterface {
   private var sectionPrice = ((8900, 3200) , (5080, 2040))
 
   def normalCommutePrice(i: Int): Int = calculatePrice(i, NormalTrainPass)
