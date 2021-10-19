@@ -1,4 +1,4 @@
 trait SectionInterface {
-  def normalCommutePrice(i: Int): Int
-  def schoolCommutePrice(i: Int): Int
+  def normalCommutePrice(i: TrainPassPeriod): Int
+  def schoolCommutePrice(i: TrainPassPeriod): Int
 }
