@@ -3,7 +3,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import org.scalatest.matchers.must.Matchers.be
 import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 
-import java.util.Date
+import java.util.Calendar
 
 class TicketTest extends AnyFunSuite {
   test("新宿武蔵野台の通勤1ヶ月定期代を表示する") {
@@ -22,8 +22,17 @@ class TicketTest extends AnyFunSuite {
   }
 
   test("定期券クラスを使用する") {
-    var ticket = TrainPass("新宿", "武蔵野台", NormalTrainPass, OneMonth, new Date())
+    var ticket = TrainPass("新宿", "武蔵野台", NormalTrainPass, OneMonth, Calendar.getInstance())
     ticket.getPrice should be (8990)
+  }
+
+  test("定期の期限を計算する") {
+    var c1 = Calendar.getInstance()
+    c1.set(2021,9,1)
+    var ticket = TrainPass("新宿", "武蔵野台", NormalTrainPass, OneMonth, c1)
+    var c2 = Calendar.getInstance()
+    c2.set(2021,9,30)
+    ticket.getEndDate should be (c2)
   }
 
 
