@@ -32,7 +32,7 @@ class TicketTest extends AnyFunSuite {
     var ticket = TrainPass("新宿", "武蔵野台", NormalTrainPass, OneMonth, c1)
     var c2 = Calendar.getInstance()
     c2.set(2021,9,30)
-    ticket.getEndDate should be (c2)
+    ticket.endDate should be (c2)
   }
 
 
