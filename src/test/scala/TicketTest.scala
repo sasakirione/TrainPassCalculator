@@ -26,5 +26,10 @@ class TicketTest extends AnyFunSuite {
     ticket.getPrice should be (25630)
   }
 
+  test("券面の作成") {
+    var calendar = Calendar.getInstance()
+    var ticket = TrainPass("新宿", "武蔵野台", NormalTrainPass, ThreeMonth, calendar)
+    println(ticket)
+  }
 
 }

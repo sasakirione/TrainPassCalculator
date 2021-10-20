@@ -44,6 +44,26 @@ case class TrainPass(from: String, to: String, passType: TrainPassType, passPeri
       case SixMonth => (math.ceil(oneMonthPrice * 6 * 0.09) * 10).toInt
     }
   }
+
+  override def toString: String = {
+    from + " - " + to + " " + toStringType + toStringPeriod + "定期券"
+  }
+
+  def toStringType: String = {
+    passType match {
+      case NormalTrainPass => "通勤"
+      case SchoolTrainPass => "通学"
+    }
+  }
+
+  def toStringPeriod: String = {
+    passPeriod match {
+      case OneMonth => "1ヶ月"
+      case ThreeMonth => "3ヶ月"
+      case SixMonth => "6ヶ月"
+    }
+  }
+
 }
 
 /** 定期券の期間を表すクラス(Enum代用) */
