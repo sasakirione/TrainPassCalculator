@@ -32,4 +32,8 @@ class TicketTest extends AnyFunSuite {
     println(ticket)
   }
 
+  test("井の頭線") {
+    // var section = KeioSection("新宿", "吉祥寺")
+  }
+
 }

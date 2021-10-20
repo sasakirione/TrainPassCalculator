@@ -11,9 +11,9 @@ import scala.math
  */
 case class TrainPass(from: String, to: String, passType: TrainPassType, passPeriod: TrainPassPeriod, StartDate: Calendar) {
   /** 定期券区間 */
-  var section: SectionInterface = KeioSection(to, from)
+  val section: SectionInterface = KeioSection(to, from)
   /** 定期券の終了日 */
-  var endDate: Calendar = {
+  val endDate: Calendar = {
     calculateEndDate
   }
 
@@ -45,10 +45,18 @@ case class TrainPass(from: String, to: String, passType: TrainPassType, passPeri
     }
   }
 
+  /**
+   * toStringのオーバーライドメソッド
+   * @return 券面(？)
+   */
   override def toString: String = {
     from + " - " + to + " " + toStringType + toStringPeriod + "定期券"
   }
 
+  /**
+   * passTypeの日本語化
+   * @return 定期の種類(日本語)
+   */
   def toStringType: String = {
     passType match {
       case NormalTrainPass => "通勤"
@@ -56,6 +64,10 @@ case class TrainPass(from: String, to: String, passType: TrainPassType, passPeri
     }
   }
 
+  /**
+   * passPeriodの日本語化
+   * @return 定期の期間(日本語)
+   */
   def toStringPeriod: String = {
     passPeriod match {
       case OneMonth => "1ヶ月"
