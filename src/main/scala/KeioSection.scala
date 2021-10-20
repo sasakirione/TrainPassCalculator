@@ -18,27 +18,14 @@ case class KeioSection(from: String, to: String) extends SectionInterface {
   private var distance = abs(toDouble - fromDouble)
 
   /**
-   * 通勤定期の運賃を取得する
-   * @param i 定期券の期間
-   * @return 定期運賃
-   */
-  def normalCommutePrice(i: TrainPassPeriod): Int = calculatePrice(i, NormalTrainPass)
-
-  /**
-   * 通学定期の運賃を取得する
-   * @param i 定期券の期間
-   * @return 定期運賃
-   */
-  def schoolCommutePrice(i: TrainPassPeriod): Int = calculatePrice(i, SchoolTrainPass)
-
-  /**
    * 実際に定期運賃を計算する
-   * @param i 定期券の期間
    * @param passType 定期券の種類
    * @return 定期運賃
    */
-  private def calculatePrice(i: TrainPassPeriod, passType: TrainPassType): Int = {
+  def calculatePrice(passType: TrainPassType): Int = {
+    // 営業キロ数から運賃を取得する
     var price = sectionPrice.filter(p =>  distance <= p._1).head
+
     passType match {
       case NormalTrainPass => price._2
       case SchoolTrainPass => price._3

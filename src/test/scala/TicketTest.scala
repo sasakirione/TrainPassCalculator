@@ -6,21 +6,6 @@ import org.scalatest.matchers.should.Matchers.convertToAnyShouldWrapper
 import java.util.Calendar
 
 class TicketTest extends AnyFunSuite {
-  test("新宿武蔵野台の通勤1ヶ月定期代を表示する") {
-    var ticket = KeioSection("新宿", "武蔵野台")
-    ticket.normalCommutePrice(OneMonth) should be (8990)
-  }
-
-  test("新宿明大前の通勤3ヶ月定期代を表示する") {
-    var ticket = KeioSection("新宿", "明大前")
-    ticket.normalCommutePrice(OneMonth) should be (5080)
-  }
-
-  test("新宿武蔵野台の通学1ヶ月定期代を表示する") {
-    var ticket = KeioSection("新宿", "武蔵野台")
-    ticket.schoolCommutePrice(OneMonth) should be (3200)
-  }
-
   test("定期券クラスを使用する") {
     var ticket = TrainPass("新宿", "武蔵野台", NormalTrainPass, OneMonth, Calendar.getInstance())
     ticket.getPrice should be (8990)
@@ -33,6 +18,12 @@ class TicketTest extends AnyFunSuite {
     var c2 = Calendar.getInstance()
     c2.set(2021,9,30)
     ticket.endDate should be (c2)
+  }
+
+  test("新宿武蔵野台の通勤3ヶ月定期を表示する") {
+    var calendar = Calendar.getInstance()
+    var ticket = TrainPass("新宿", "武蔵野台", NormalTrainPass, ThreeMonth, calendar)
+    ticket.getPrice should be (25630)
   }
 
 

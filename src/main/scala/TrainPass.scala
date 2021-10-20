@@ -1,4 +1,5 @@
 import java.util.Calendar
+import scala.math
 
 /**
  * 定期券を表すクラスです
@@ -36,9 +37,11 @@ case class TrainPass(from: String, to: String, passType: TrainPassType, passPeri
    * @return 定期運賃
    */
   def getPrice: Int = {
-    passType match {
-      case NormalTrainPass => section.normalCommutePrice(passPeriod)
-      case SchoolTrainPass => section.schoolCommutePrice(passPeriod)
+    val oneMonthPrice = section.calculatePrice(passType)
+    passPeriod match {
+      case OneMonth => oneMonthPrice
+      case ThreeMonth => (math.ceil(oneMonthPrice * 3 * 0.095) * 10).toInt
+      case SixMonth => (math.ceil(oneMonthPrice * 6 * 0.09) * 10).toInt
     }
   }
 }
