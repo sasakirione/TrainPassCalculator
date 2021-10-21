@@ -6,12 +6,30 @@ import scala.math.abs
  * @param to 着駅
  */
 case class KeioSection(from: String, to: String) extends SectionInterface {
-  /** 発駅の新宿からの営業キロ数 */
-  private val fromDouble:Double = KeioConst.salesDistanceKeioLine.filter(s => s._1.equals(from)).last._2
-  /** 着駅の新宿からの営業キロ数 */
-  private val toDouble:Double = KeioConst.salesDistanceKeioLine.filter(s => s._1.equals(to)).last._2
   /** 発駅から着駅までの営業キロ数 */
-  private val distance = abs(toDouble - fromDouble)
+  private val distance = calculateDistance()
+
+  private def calculateDistance(): Double = {
+    val fromStationExist = isExistStation(from)
+    val toStationExist = isExistStation(to)
+    (fromStationExist, toStationExist) match {
+      case ((true, false),(true,false)) => calculateDistanceInLine(KeioConst.salesDistanceKeioLine, to, from)
+      case ((true, false),(false, true)) => calculateDistanceInLine(KeioConst.salesDistanceInokashiraLineNorth, to, "明大前") +
+        calculateDistanceInLine(KeioConst.salesDistanceKeioLine, "明大前", from)
+      case ((false, true), (true, false)) => calculateDistanceInLine(KeioConst.salesDistanceInokashiraLineNorth, from, "明大前") +
+        calculateDistanceInLine(KeioConst.salesDistanceKeioLine, "明大前", to)
+      case ((false, true),(false, true)) => calculateDistanceInLine(KeioConst.salesDistanceInokashiraLineNorth, to, from)
+    }
+  }
+
+  private def calculateDistanceInLine(line: List[(String, Double)], tempTo: String, tempFrom: String): Double = {
+    abs(line.filter(s => s._1.equals(tempFrom)).last._2 - line.filter(s => s._1.equals(tempTo)).last._2)
+  }
+
+  private def isExistStation(stationName: String): (Boolean, Boolean) = {
+    (KeioConst.salesDistanceKeioLine.exists(s => s._1.equals(stationName)),
+      KeioConst.salesDistanceInokashiraLineNorth.exists(s => s._1.equals(stationName)))
+  }
 
   /**
    * 実際に定期運賃を計算する
