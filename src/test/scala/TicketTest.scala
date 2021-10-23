@@ -34,7 +34,11 @@ class TicketTest extends AnyFunSuite {
 
   test("井の頭線") {
     var section = KeioSection("新宿", "吉祥寺")
+    var section2 = KeioSection("渋谷", "吉祥寺")
+    var section3 = KeioSection("新宿", "渋谷")
     section.calculatePrice(NormalTrainPass) should be(7430)
+    section2.calculatePrice(NormalTrainPass) should be(7430)
+    section3.calculatePrice(NormalTrainPass) should be(6680)
   }
 
 }

@@ -9,14 +9,19 @@ case class KeioSection(from: String, to: String) extends SectionInterface {
   /** 発駅から着駅までの営業キロ数 */
   private val distance = calculateDistance()
 
-  def calculateDistanceAllLine(fromLine: (String, Double, String), toLine: (String, Double, String), distance: Double): Double = {
-    fromLine._3 match {
-      case toLine._3 => distance + abs(fromLine._2 - toLine._2)
-      case "京王線" => toLine._3 match {
-        case "井の頭線北" => calculateDistanceAllLine(fromLine, getStation("明大前"), distance + toLine._2)
+  def calculateDistanceAllLine(fromStation: (String, Double, String), toStation: (String, Double, String), distance: Double): Double = {
+    fromStation._3 match {
+      case toStation._3 => distance + abs(fromStation._2 - toStation._2)
+      case "京王線" => toStation._3 match {
+        case "井の頭線北" | "井の頭線南" => calculateDistanceAllLine(fromStation, getStation("明大前"), distance + toStation._2)
       }
-      case "井の頭線北" => toLine._3 match {
-        case "京王線" => calculateDistanceAllLine(getStation("明大前"), toLine, distance + fromLine._2)
+      case "井の頭線北" => toStation._3 match {
+        case "京王線" => calculateDistanceAllLine(getStation("明大前"), toStation, distance + fromStation._2)
+        case "井の頭線南" => fromStation._2 + toStation._2
+      }
+      case "井の頭線南" => toStation._3 match {
+        case "京王線" => calculateDistanceAllLine(getStation("明大前"), toStation, distance + fromStation._2)
+        case "井の頭線北" => fromStation._2 + toStation._2
       }
     }
   }
