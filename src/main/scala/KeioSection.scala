@@ -9,26 +9,26 @@ case class KeioSection(from: String, to: String) extends SectionInterface {
   /** 発駅から着駅までの営業キロ数 */
   private val distance = calculateDistance()
 
-  private def calculateDistance(): Double = {
-    val fromStationExist = isExistStation(from)
-    val toStationExist = isExistStation(to)
-    (fromStationExist, toStationExist) match {
-      case ((true, false),(true,false)) => calculateDistanceInLine(KeioConst.salesDistanceKeioLine, to, from)
-      case ((true, false),(false, true)) => calculateDistanceInLine(KeioConst.salesDistanceInokashiraLineNorth, to, "明大前") +
-        calculateDistanceInLine(KeioConst.salesDistanceKeioLine, "明大前", from)
-      case ((false, true), (true, false)) => calculateDistanceInLine(KeioConst.salesDistanceInokashiraLineNorth, from, "明大前") +
-        calculateDistanceInLine(KeioConst.salesDistanceKeioLine, "明大前", to)
-      case ((false, true),(false, true)) => calculateDistanceInLine(KeioConst.salesDistanceInokashiraLineNorth, to, from)
+  def calculateDistanceAllLine(fromLine: (String, Double, String), toLine: (String, Double, String), distance: Double): Double = {
+    fromLine._3 match {
+      case toLine._3 => distance + abs(fromLine._2 - toLine._2)
+      case "京王線" => toLine._3 match {
+        case "井の頭線北" => calculateDistanceAllLine(fromLine, getStation("明大前"), distance + toLine._2)
+      }
+      case "井の頭線北" => toLine._3 match {
+        case "京王線" => calculateDistanceAllLine(getStation("明大前"), toLine, distance + fromLine._2)
+      }
     }
   }
 
-  private def calculateDistanceInLine(line: List[(String, Double)], tempTo: String, tempFrom: String): Double = {
-    abs(line.filter(s => s._1.equals(tempFrom)).last._2 - line.filter(s => s._1.equals(tempTo)).last._2)
+  def calculateDistance(): Double = {
+    val fromLine = getStation(from)
+    val toLine = getStation(to)
+    calculateDistanceAllLine(fromLine, toLine, 0)
   }
 
-  private def isExistStation(stationName: String): (Boolean, Boolean) = {
-    (KeioConst.salesDistanceKeioLine.exists(s => s._1.equals(stationName)),
-      KeioConst.salesDistanceInokashiraLineNorth.exists(s => s._1.equals(stationName)))
+  private def getStation(station: String): (String, Double, String) = {
+    KeioConst.salesDistanceAll.filter(s => s._1.equals(station)).last
   }
 
   /**
