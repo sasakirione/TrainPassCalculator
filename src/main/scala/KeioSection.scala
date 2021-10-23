@@ -9,6 +9,13 @@ case class KeioSection(from: String, to: String) extends SectionInterface {
   /** 発駅から着駅までの営業キロ数 */
   private val distance = calculateDistance()
 
+  /**
+   * 営業キロ数計算
+   * @param fromStation 計算対象の発駅
+   * @param toStation 計算対象の着駅
+   * @param distance 計算対象外の営業キロ
+   * @return 営業キロ数
+   */
   def calculateDistanceAllLine(fromStation: (String, Double, String), toStation: (String, Double, String), distance: Double): Double = {
     fromStation._3 match {
       case toStation._3 => distance + abs(fromStation._2 - toStation._2)
@@ -26,12 +33,21 @@ case class KeioSection(from: String, to: String) extends SectionInterface {
     }
   }
 
+  /**
+   * 営業キロ数計算
+   * @return 営業キロ数
+   */
   def calculateDistance(): Double = {
     val fromLine = getStation(from)
     val toLine = getStation(to)
     calculateDistanceAllLine(fromLine, toLine, 0)
   }
 
+  /**
+   * 駅データの取得
+   * @param station 駅名
+   * @return 駅データ
+   */
   private def getStation(station: String): (String, Double, String) = {
     KeioConst.salesDistanceAll.filter(s => s._1.equals(station)).last
   }

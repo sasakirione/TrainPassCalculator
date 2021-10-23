@@ -13,23 +13,21 @@ case class TrainPass(from: String, to: String, passType: TrainPassType, passPeri
   /** 定期券区間 */
   val section: SectionInterface = KeioSection(to, from)
   /** 定期券の終了日 */
-  val endDate: Calendar = {
-    calculateEndDate
-  }
+  val endDate: Calendar = calculateEndDate
 
   /**
    * 定期券の期限を計算する
    * @return 定期券の終了日
    */
   private def calculateEndDate = {
-    var workDay: Calendar = StartDate.clone().asInstanceOf[Calendar]
-    workDay.add(Calendar.DAY_OF_MONTH, -1)
+    var endDateWorking: Calendar = StartDate.clone().asInstanceOf[Calendar]
+    endDateWorking.add(Calendar.DAY_OF_MONTH, -1)
     passPeriod match {
-      case OneMonth => workDay.add(Calendar.MONTH, 1)
-      case ThreeMonth => workDay.add(Calendar.MONTH, 3)
-      case SixMonth => workDay.add(Calendar.MONTH, 6)
+      case OneMonth => endDateWorking.add(Calendar.MONTH, 1)
+      case ThreeMonth => endDateWorking.add(Calendar.MONTH, 3)
+      case SixMonth => endDateWorking.add(Calendar.MONTH, 6)
     }
-    workDay
+    endDateWorking
   }
 
   /**
